@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #qrcode {
+      margin-top: 30px;
+    }
+    #qr-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    #download-btn {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Code Generator</h1>
+  <input type="text" id="text" placeholder="Enter a URL or text" />
+  <button onclick="generateQRCode()">Generate</button>
+  <button id="download-btn" onclick="downloadQRCode()">Download PNG</button>
+
+  <div id="qrcode">
+    <div id="qr-wrapper"></div>
+  </div>
+
+  <!-- QRCode.js library via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    let qr;
+
+    function generateQRCode() {
+      const text = document.getElementById("text").value;
+      if (!text) return;
+
+      const qrWrapper = document.getElementById("qr-wrapper");
+      qrWrapper.innerHTML = ""; // Clear previous QR
+
+      qr = new QRCode(qrWrapper, {
+        text: text,
+        width: 200,
+        height: 200,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // Show the download button
+      document.getElementById("download-btn").style.display = "inline-block";
+    }
+
+    function downloadQRCode() {
+      const qrCanvas = document.querySelector("#qr-wrapper canvas");
+      if (!qrCanvas) return;
+
+      const link = document.createElement("a");
+      link.download = "qrcode.png";
+      link.href = qrCanvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+</html>
